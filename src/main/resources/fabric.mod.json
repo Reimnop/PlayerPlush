@@ -19,6 +19,9 @@
       "com.reimnop.player_plush.PlayerPlush"
     ]
   },
+  "mixins": [
+    "player_plush.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
