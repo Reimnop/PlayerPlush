@@ -7,10 +7,16 @@ import net.fabricmc.api.Environment;
 public enum PlushModelPart {
     ROOT,
     HEAD,
+    HAT,
     BODY,
-    LEFT_ARM,
+    JACKET,
     RIGHT_ARM,
-    LEFT_LEG,
+    RIGHT_SLEEVE,
+    LEFT_ARM,
+    LEFT_SLEEVE,
     RIGHT_LEG,
+    RIGHT_PANTS,
+    LEFT_LEG,
+    LEFT_PANTS,
     CLOAK
 }
