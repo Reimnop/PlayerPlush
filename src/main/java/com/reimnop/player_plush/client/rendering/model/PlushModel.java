@@ -52,10 +52,6 @@ public class PlushModel {
         };
     }
 
-    public void setAllPartsVisible(boolean visible) {
-        root.getAllParts().forEach(part -> part.visible = visible);
-    }
-
     public void render(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green,float blue, float alpha) {
         root.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }

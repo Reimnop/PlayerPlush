@@ -58,18 +58,20 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
         ResourceLocation skinTexture = skin.texture();
         RenderType renderType = getRenderType(skinTexture);
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderType);
-        model.setAllPartsVisible(true);
-        cloak.visible = false;
+        cloak.skipDraw = true;
         model.render(matrices, vertexConsumer, light, overlay, r, g, b, a);
 
         // Render cape
         ResourceLocation capeTexture = skin.capeTexture();
         if (capeTexture != null) {
-            model.setAllPartsVisible(false);
-            cloak.visible = true;
             RenderType capeRenderType = getRenderType(capeTexture);
             VertexConsumer capeVertexConsumer = vertexConsumers.getBuffer(capeRenderType);
-            model.render(matrices, capeVertexConsumer, light, overlay, r, g, b, a);
+
+            matrices.pushPose();
+            matrices.translate(0.0F, 0.0F, 0.1875F);
+            cloak.skipDraw = false;
+            cloak.render(matrices, capeVertexConsumer, light, overlay, r, g, b, a);
+            matrices.popPose();
         }
 
         matrices.popPose();

@@ -1,6 +1,8 @@
 package com.reimnop.player_plush.item;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.yggdrasil.ProfileResult;
 import com.reimnop.player_plush.accessor.MinecraftAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -22,11 +24,20 @@ public class PlushItem extends Item {
             return NbtUtils.readGameProfile(tag.getCompound("Owner"));
         } else if (tag.contains("Owner", Tag.TAG_STRING)) {
             GameProfileCache profileCache = getProfileCache();
-            if (profileCache != null) {
-                return profileCache
-                        .get(tag.getString("Owner"))
-                        .orElse(null);
-            }
+            if (profileCache == null)
+                return null;
+            GameProfile profile = profileCache
+                    .get(tag.getString("Owner"))
+                    .orElse(null);
+            if (profile == null)
+                return null;
+            MinecraftSessionService sessionService = getSessionService();
+            if (sessionService == null)
+                return null;
+            ProfileResult result = sessionService.fetchProfile(profile.getId(), false);
+            if (result == null)
+                return null;
+            return result.profile();
         }
         return null;
     }
@@ -39,6 +50,16 @@ public class PlushItem extends Item {
         if (services == null)
             return null;
         return services.profileCache();
+    }
+
+    @Nullable
+    private static MinecraftSessionService getSessionService() {
+        Minecraft minecraft = Minecraft.getInstance();
+        MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
+        Services services = accessor.playerPlush$getServices();
+        if (services == null)
+            return null;
+        return services.sessionService();
     }
 
     public static float getColorR(@Nullable CompoundTag tag) {
