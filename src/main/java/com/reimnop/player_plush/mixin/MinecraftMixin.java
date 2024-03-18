@@ -1,6 +1,7 @@
 package com.reimnop.player_plush.mixin;
 
 import com.reimnop.player_plush.accessor.MinecraftAccessor;
+import com.reimnop.player_plush.event.ServicesLifecycleCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -44,6 +45,7 @@ public class MinecraftMixin implements MinecraftAccessor {
             Instant instant,
             Services services) {
         this.services = services;
+        ServicesLifecycleCallback.INIT.invoker().onServicesLifecycle(services);
     }
 
     @Inject(method = "setLevel",
@@ -57,15 +59,18 @@ public class MinecraftMixin implements MinecraftAccessor {
             ProgressScreen progressScreen,
             Services services) {
         this.services = services;
+        ServicesLifecycleCallback.INIT.invoker().onServicesLifecycle(services);
     }
 
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"))
+    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("TAIL"))
     public void disconnectInject(Screen nextScreen, CallbackInfo ci) {
+        ServicesLifecycleCallback.DEINIT.invoker().onServicesLifecycle(services);
         services = null;
     }
 
-    @Inject(method = "clearClientLevel", at = @At("HEAD"))
+    @Inject(method = "clearClientLevel", at = @At("TAIL"))
     public void clearClientLevelInject(Screen nextScreen, CallbackInfo ci) {
+        ServicesLifecycleCallback.DEINIT.invoker().onServicesLifecycle(services);
         services = null;
     }
 }

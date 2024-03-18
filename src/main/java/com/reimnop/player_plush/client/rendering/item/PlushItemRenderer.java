@@ -68,7 +68,8 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             VertexConsumer capeVertexConsumer = vertexConsumers.getBuffer(capeRenderType);
 
             matrices.pushPose();
-            matrices.translate(0.0F, 0.0F, 0.1875F);
+            matrices.translate(0.0F, 0.0F, 0.125F);
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 1.0D, 0.0D)));
             cloak.skipDraw = false;
             cloak.render(matrices, capeVertexConsumer, light, overlay, r, g, b, a);
             matrices.popPose();

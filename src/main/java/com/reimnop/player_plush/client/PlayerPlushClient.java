@@ -2,6 +2,7 @@ package com.reimnop.player_plush.client;
 
 import com.reimnop.player_plush.ItemRegistry;
 import com.reimnop.player_plush.client.rendering.item.PlushItemRenderer;
+import com.reimnop.player_plush.event.ServicesLifecycleCallback;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,5 +18,9 @@ public class PlayerPlushClient implements ClientModInitializer {
     public void onInitializeClient() {
         // Register item renderer
         BuiltinItemRendererRegistry.INSTANCE.register(ItemRegistry.PLUSH, new PlushItemRenderer());
+
+        // Subscribe to events
+        ServicesLifecycleCallback.INIT.register(FetchedGameProfileCache::initialize);
+        ServicesLifecycleCallback.DEINIT.register(services -> FetchedGameProfileCache.clear());
     }
 }
