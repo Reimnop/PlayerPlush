@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "player_plush",
+  "version": "${version}",
+  "name": "Player Plush",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/rayng/Player Plush"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/player_plush/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.reimnop.player_plush.client.PlayerPlushClient"
+    ],
+    "main": [
+      "com.reimnop.player_plush.PlayerPlush"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
