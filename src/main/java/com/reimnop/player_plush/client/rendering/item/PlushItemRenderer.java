@@ -54,7 +54,7 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
                     .getRenderer(player);
 
             matrices.pushPose();
-            matrices.translate(-0.08D, 0.25D, 0.55D);
+            matrices.translate(-0.08D, 0.25D, 0.6D);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.5D, 1.0D, 0.0D, 0.0D)));
@@ -62,7 +62,7 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             matrices.popPose();
 
             matrices.pushPose();
-            matrices.translate(0.08D, 0.25D, 0.55D);
+            matrices.translate(0.08D, 0.25D, 0.6D);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.525, 1.0D, 0.0D, 0.0D)));
