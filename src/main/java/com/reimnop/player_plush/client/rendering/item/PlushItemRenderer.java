@@ -13,8 +13,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.resources.SkinManager;
@@ -44,8 +46,34 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
 
         // Setup for rendering
         matrices.pushPose();
+        if (mode == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
+            Minecraft minecraft = Minecraft.getInstance();
+            AbstractClientPlayer player = minecraft.player;
+            PlayerRenderer playerRenderer = (PlayerRenderer) minecraft
+                    .getEntityRenderDispatcher()
+                    .getRenderer(player);
+
+            matrices.pushPose();
+            matrices.translate(-0.08D, 0.25D, 0.55D);
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.5D, 1.0D, 0.0D, 0.0D)));
+            playerRenderer.renderLeftHand(matrices, vertexConsumers, light, player);
+            matrices.popPose();
+
+            matrices.pushPose();
+            matrices.translate(0.08D, 0.25D, 0.55D);
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.525, 1.0D, 0.0D, 0.0D)));
+            playerRenderer.renderRightHand(matrices, vertexConsumers, light, player);
+            matrices.popPose();
+
+            matrices.translate(-0.5D, 0.25D, -0.85D);
+        }
+
         matrices.translate(0.5D, 0.75D, 0.5D);
-        matrices.scale(0.5F, 0.5F, 0.5F);
+        matrices.scale(0.75F, 0.75F, 0.75F);
         matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 1.0D, 0.0D, 0.0D)));
 
         PlushModel model = skin.model() == PlayerSkin.Model.SLIM ? SLIM_MODEL : FULL_MODEL;

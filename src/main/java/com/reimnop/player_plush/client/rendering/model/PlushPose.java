@@ -13,10 +13,10 @@ public interface PlushPose {
         case LEFT_ARM -> PlushBodyPartPose.DEFAULT_LEFT_ARM
                 .withPitch(-40.0F * MathUtil.DEG_2_RAD);
         case RIGHT_LEG -> PlushBodyPartPose.DEFAULT_RIGHT_LEG
-                .withYaw(15.0F * MathUtil.DEG_2_RAD)
+                .withYaw(20.0F * MathUtil.DEG_2_RAD)
                 .withPitch(-85.0F * MathUtil.DEG_2_RAD);
         case LEFT_LEG -> PlushBodyPartPose.DEFAULT_LEFT_LEG
-                .withYaw(-15.0F * MathUtil.DEG_2_RAD)
+                .withYaw(-20.0F * MathUtil.DEG_2_RAD)
                 .withPitch(-85.0F * MathUtil.DEG_2_RAD);
         default -> null;
     };
