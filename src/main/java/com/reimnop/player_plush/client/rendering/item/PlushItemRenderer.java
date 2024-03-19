@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4d;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.Objects;
@@ -44,7 +45,6 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
         // Get player skin
         PlayerSkin skin = getSkin(gameProfile);
 
-        // Setup for rendering
         matrices.pushPose();
         if (mode == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
             Minecraft minecraft = Minecraft.getInstance();
@@ -76,6 +76,18 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
         matrices.scale(0.75F, 0.75F, 0.75F);
         matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 1.0D, 0.0D, 0.0D)));
 
+        matrices.pushPose();
+        if (mode == ItemDisplayContext.GUI) {
+            matrices.translate(0.125D, 0.125D, 0.0D);
+            matrices.scale(0.7F, 0.7F, 0.7F);
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 1.0D, 0.0D, 0.0D)));
+            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 0.0D, 1.0D, 0.0D)));
+        } else if (mode == ItemDisplayContext.GROUND) {
+            matrices.scale(0.5F, 0.5F, 0.5F);
+        } else if (mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND || mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
+            matrices.translate(0.0D, -0.5D, 0.0D);
+        }
+
         PlushModel model = skin.model() == PlayerSkin.Model.SLIM ? SLIM_MODEL : FULL_MODEL;
         model.applyPose(PlushPose.SITTING);
         ModelPart cloak = Objects.requireNonNull(model.getModelPart(PlushModelPart.CLOAK));
@@ -106,6 +118,7 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             matrices.popPose();
         }
 
+        matrices.popPose();
         matrices.popPose();
     }
 
