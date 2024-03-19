@@ -48,14 +48,16 @@ public class PlushModel {
         leftLeg = root.getChild("left_leg");
         leftPants = root.getChild("left_pants");
         cloak = root.getChild("cloak");
+    }
 
-        // TODO: Don't hardcode pose
-        rightArm.xRot = rightSleeve.xRot = (float) Math.toRadians(-30.0D);
-        leftArm.xRot = leftSleeve.xRot = (float) Math.toRadians(-30.0D);
-        rightLeg.xRot = rightPants.xRot = (float) Math.toRadians(-85.0D);
-        rightLeg.yRot = rightPants.yRot = (float) Math.toRadians(15.0D);
-        leftLeg.xRot = leftPants.xRot = (float) Math.toRadians(-85.0D);
-        leftLeg.yRot = leftPants.yRot = (float) Math.toRadians(-15.0D);
+    public void applyPose(PlushPose pose) {
+        applyPose(pose, PlushBodyPart.ROOT, root);
+        applyPose(pose, PlushBodyPart.HEAD, head, hat);
+        applyPose(pose, PlushBodyPart.BODY, body, jacket);
+        applyPose(pose, PlushBodyPart.RIGHT_ARM, rightArm, rightSleeve);
+        applyPose(pose, PlushBodyPart.LEFT_ARM, leftArm, leftSleeve);
+        applyPose(pose, PlushBodyPart.RIGHT_LEG, rightLeg, rightPants);
+        applyPose(pose, PlushBodyPart.LEFT_LEG, leftLeg, leftPants);
     }
 
     @Nullable
@@ -80,5 +82,19 @@ public class PlushModel {
 
     public void render(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green,float blue, float alpha) {
         root.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    private void applyPose(PlushPose pose, PlushBodyPart bodyPart, ModelPart... modelParts) {
+        PlushBodyPartPose bodyPartPose = pose.getPose(bodyPart);
+        if (bodyPartPose != null) {
+            for (ModelPart modelPart : modelParts) {
+                modelPart.x = bodyPartPose.x();
+                modelPart.y = bodyPartPose.y();
+                modelPart.z = bodyPartPose.z();
+                modelPart.xRot = bodyPartPose.pitch();
+                modelPart.yRot = bodyPartPose.yaw();
+                modelPart.zRot = bodyPartPose.roll();
+            }
+        }
     }
 }

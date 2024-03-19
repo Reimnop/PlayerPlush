@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.reimnop.player_plush.client.rendering.model.PlushModel;
 import com.reimnop.player_plush.client.rendering.model.PlushModelPart;
+import com.reimnop.player_plush.client.rendering.model.PlushPose;
 import com.reimnop.player_plush.item.PlushItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,10 +44,12 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
 
         // Setup for rendering
         matrices.pushPose();
-        matrices.translate(0.5D, 1.5D, 0.5D);
+        matrices.translate(0.5D, 0.75D, 0.5D);
+        matrices.scale(0.5F, 0.5F, 0.5F);
         matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 1.0D, 0.0D, 0.0D)));
 
         PlushModel model = skin.model() == PlayerSkin.Model.SLIM ? SLIM_MODEL : FULL_MODEL;
+        model.applyPose(PlushPose.SITTING);
         ModelPart cloak = Objects.requireNonNull(model.getModelPart(PlushModelPart.CLOAK));
 
         float r = PlushItem.getColorR(tag);
