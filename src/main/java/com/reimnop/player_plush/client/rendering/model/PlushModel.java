@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -30,7 +29,7 @@ public class PlushModel {
 
     public PlushModel(int texWidth, int texHeight, boolean slim) {
         // Create a model from the player model
-        MeshDefinition mesh = PlayerModel.createMesh(CubeDeformation.NONE, slim);
+        MeshDefinition mesh = PlushMesh.createMesh(slim, CubeDeformation.NONE);
 
         // Bake and get the parts
         PartDefinition part = mesh.getRoot();
