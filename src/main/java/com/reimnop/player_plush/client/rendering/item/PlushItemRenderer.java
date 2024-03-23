@@ -3,8 +3,9 @@ package com.reimnop.player_plush.client.rendering.item;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import com.reimnop.player_plush.client.rendering.model.CapeMesh;
 import com.reimnop.player_plush.client.rendering.model.PlushModel;
-import com.reimnop.player_plush.client.rendering.model.PlushModelPart;
 import com.reimnop.player_plush.client.rendering.model.PlushPose;
 import com.reimnop.player_plush.item.PlushItem;
 import net.fabricmc.api.EnvType;
@@ -26,15 +27,14 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4d;
-import org.joml.Matrix4f;
+import org.joml.Math;
 import org.joml.Quaternionf;
-
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private static final PlushModel FULL_MODEL = new PlushModel(64, 64, false);
     private static final PlushModel SLIM_MODEL = new PlushModel(64, 64, true);
+    private static final ModelPart CAPE_MODEL = CapeMesh.createMesh().getRoot().bake(64, 32);
 
     @Override
     public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
@@ -54,7 +54,7 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
                     .getRenderer(player);
 
             matrices.pushPose();
-            matrices.translate(-0.08D, 0.25D, 0.6D);
+            matrices.translate(-0.08F, 0.25F, 0.6F);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.5D, 1.0D, 0.0D, 0.0D)));
@@ -62,35 +62,33 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             matrices.popPose();
 
             matrices.pushPose();
-            matrices.translate(0.08D, 0.25D, 0.6D);
+            matrices.translate(0.08F, 0.25F, 0.6F);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 0.0D, 1.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI / 6.0D, 0.0D, 1.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(-Math.PI * 0.525, 1.0D, 0.0D, 0.0D)));
             playerRenderer.renderRightHand(matrices, vertexConsumers, light, player);
             matrices.popPose();
 
-            matrices.translate(-0.5D, 0.25D, -0.85D);
+            matrices.translate(-0.5F, -0.375F, -0.85F);
         }
 
-        matrices.translate(0.5D, 0.75D, 0.5D);
-        matrices.scale(0.75F, 0.75F, 0.75F);
-        matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 1.0D, 0.0D, 0.0D)));
+        matrices.translate(0.5F, 0.0F, 0.5F);
 
-        matrices.pushPose();
         if (mode == ItemDisplayContext.GUI) {
-            matrices.translate(0.125D, 0.125D, 0.0D);
-            matrices.scale(0.7F, 0.7F, 0.7F);
+            matrices.translate(-0.05F, -0.05F, 0.0F);
+            matrices.scale(0.55F, 0.55F, 0.55F);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 1.0D, 0.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 0.0D, 1.0D, 0.0D)));
         } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.5F, 0.5F, 0.5F);
         } else if (mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND || mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
             matrices.translate(0.0D, -0.5D, 0.0D);
+        } else {
+            matrices.scale(0.75F, 0.75F, 0.75F);
         }
 
         PlushModel model = skin.model() == PlayerSkin.Model.SLIM ? SLIM_MODEL : FULL_MODEL;
         model.applyPose(PlushPose.SITTING);
-        ModelPart cloak = Objects.requireNonNull(model.getModelPart(PlushModelPart.CLOAK));
 
         float r = PlushItem.getColorR(tag);
         float g = PlushItem.getColorG(tag);
@@ -101,7 +99,6 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
         ResourceLocation skinTexture = skin.texture();
         RenderType renderType = getRenderType(skinTexture);
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(renderType);
-        cloak.skipDraw = true;
         model.render(matrices, vertexConsumer, light, overlay, r, g, b, a);
 
         // Render cape
@@ -111,14 +108,13 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             VertexConsumer capeVertexConsumer = vertexConsumers.getBuffer(capeRenderType);
 
             matrices.pushPose();
-            matrices.translate(0.0F, 0.0F, 0.125F);
-            matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI, 0.0D, 1.0D, 0.0D)));
-            cloak.skipDraw = false;
-            cloak.render(matrices, capeVertexConsumer, light, overlay, r, g, b, a);
+            matrices.translate(0.0F, 2.375F, -0.125F);
+            matrices.mulPose(Axis.YP.rotation((float) Math.PI));
+            matrices.mulPose(Axis.XP.rotation((float) Math.PI));
+            CAPE_MODEL.render(matrices, capeVertexConsumer, light, overlay, r, g, b, a);
             matrices.popPose();
         }
 
-        matrices.popPose();
         matrices.popPose();
     }
 

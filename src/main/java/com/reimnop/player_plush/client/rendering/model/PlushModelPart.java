@@ -17,6 +17,5 @@ public enum PlushModelPart {
     RIGHT_LEG,
     RIGHT_PANTS,
     LEFT_LEG,
-    LEFT_PANTS,
-    CLOAK
+    LEFT_PANTS
 }

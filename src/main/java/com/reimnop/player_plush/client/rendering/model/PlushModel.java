@@ -2,13 +2,16 @@ package com.reimnop.player_plush.client.rendering.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 @Environment(EnvType.CLIENT)
 public class PlushModel {
@@ -25,11 +28,10 @@ public class PlushModel {
     private final ModelPart rightPants;
     private final ModelPart leftLeg;
     private final ModelPart leftPants;
-    private final ModelPart cloak;
 
     public PlushModel(int texWidth, int texHeight, boolean slim) {
         // Create a model from the player model
-        MeshDefinition mesh = PlushMesh.createMesh(slim, CubeDeformation.NONE);
+        MeshDefinition mesh = PlushMesh.createMesh(slim);
 
         // Bake and get the parts
         PartDefinition part = mesh.getRoot();
@@ -46,7 +48,6 @@ public class PlushModel {
         rightPants = root.getChild("right_pants");
         leftLeg = root.getChild("left_leg");
         leftPants = root.getChild("left_pants");
-        cloak = root.getChild("cloak");
     }
 
     public void applyPose(PlushPose pose) {
@@ -75,12 +76,15 @@ public class PlushModel {
             case RIGHT_PANTS -> rightPants;
             case LEFT_LEG -> leftLeg;
             case LEFT_PANTS -> leftPants;
-            case CLOAK -> cloak;
         };
     }
 
     public void render(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green,float blue, float alpha) {
+        poseStack.pushPose();
+        poseStack.translate(0.0F, 1.875F, 0.0F);
+        poseStack.mulPose(Axis.XP.rotation((float) Math.PI));
         root.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+        poseStack.popPose();
     }
 
     private void applyPose(PlushPose pose, PlushBodyPart bodyPart, ModelPart... modelParts) {
