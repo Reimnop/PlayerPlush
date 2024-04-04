@@ -6,14 +6,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PlushItem extends Item {
-    public PlushItem(Properties properties) {
-        super(properties);
+public class PlushItem extends BlockItem {
+    public PlushItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override

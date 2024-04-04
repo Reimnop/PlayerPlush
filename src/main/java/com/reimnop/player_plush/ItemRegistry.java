@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
 public final class ItemRegistry {
-    public static final Item PLUSH = new PlushItem(new Item.Properties());
+    public static final Item PLUSH = new PlushItem(BlockRegistry.PLUSH_BLOCK, new Item.Properties());
 
     public static void register() {
         // Register items

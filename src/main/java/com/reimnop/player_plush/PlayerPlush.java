@@ -14,6 +14,8 @@ public class PlayerPlush implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Player Plush says hello!");
 
+        BlockRegistry.register();
+        BlockEntityRegistry.register();
         ItemRegistry.register();
     }
 
