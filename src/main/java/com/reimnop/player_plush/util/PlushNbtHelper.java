@@ -8,6 +8,14 @@ import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 
 public class PlushNbtHelper {
+    public static void writeProfile(CompoundTag tag, @Nullable GameProfile profile, @Nullable String ownerName) {
+        if (profile != null) {
+            tag.put("Owner", NbtUtils.writeGameProfile(new CompoundTag(), profile));
+        } else if (ownerName != null) {
+            tag.putString("Owner", ownerName);
+        }
+    }
+
     @Nullable
     public static GameProfile getProfile(CompoundTag tag) {
         if (tag.contains("Owner", Tag.TAG_COMPOUND)) {
