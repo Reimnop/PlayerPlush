@@ -80,11 +80,7 @@ public class PlushModel {
     }
 
     public void render(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green,float blue, float alpha) {
-        poseStack.pushPose();
-        poseStack.translate(0.0F, 1.875F, 0.0F);
-        poseStack.mulPose(Axis.XP.rotation((float) Math.PI));
         root.render(poseStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        poseStack.popPose();
     }
 
     private void applyPose(PlushPose pose, PlushBodyPart bodyPart, ModelPart... modelParts) {

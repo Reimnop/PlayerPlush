@@ -15,6 +15,5 @@ public class PlushBlockEntityRenderer implements BlockEntityRenderer<PlushBlockE
 
     @Override
     public void render(PlushBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-
     }
 }
