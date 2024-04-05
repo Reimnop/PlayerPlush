@@ -11,5 +11,6 @@ public enum PlushBodyPart {
     RIGHT_ARM,
     LEFT_ARM,
     RIGHT_LEG,
-    LEFT_LEG
+    LEFT_LEG,
+    CAPE
 }

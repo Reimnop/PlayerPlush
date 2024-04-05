@@ -15,6 +15,7 @@ public interface PlushPose {
         case LEFT_ARM -> PlushBodyPartPose.DEFAULT_LEFT_ARM;
         case RIGHT_LEG -> PlushBodyPartPose.DEFAULT_RIGHT_LEG;
         case LEFT_LEG -> PlushBodyPartPose.DEFAULT_LEFT_LEG;
+        case CAPE -> PlushBodyPartPose.DEFAULT_CAPE;
     };
 
     PlushPose SITTING = part -> switch (part) {
@@ -28,6 +29,8 @@ public interface PlushPose {
         case LEFT_LEG -> PlushBodyPartPose.DEFAULT_LEFT_LEG
                 .withYaw(-20.0F * MathUtil.DEG_2_RAD)
                 .withPitch(-85.0F * MathUtil.DEG_2_RAD);
+        case CAPE -> PlushBodyPartPose.DEFAULT_CAPE
+                .withPitch(-15.0F * MathUtil.DEG_2_RAD);
         default -> null;
     };
 

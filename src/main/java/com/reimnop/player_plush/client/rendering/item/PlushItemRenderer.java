@@ -54,20 +54,21 @@ public class PlushItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
             playerRenderer.renderRightHand(matrices, vertexConsumers, light, player);
             matrices.popPose();
 
-            matrices.translate(-0.5F, -0.375F, -0.85F);
+            matrices.translate(-0.5F, -0.1D, -0.85F);
         }
 
         matrices.translate(0.5F, 0.0F, 0.5F);
 
         if (mode == ItemDisplayContext.GUI) {
-            matrices.translate(-0.05F, -0.05F, 0.0F);
+            matrices.translate(-0.05F, 0.05F, 0.0F);
             matrices.scale(0.55F, 0.55F, 0.55F);
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 1.0D, 0.0D, 0.0D)));
             matrices.mulPose(new Quaternionf(new AxisAngle4d(Math.PI / 4.0F, 0.0D, 1.0D, 0.0D)));
         } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.5F, 0.5F, 0.5F);
         } else if (mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND || mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
-            matrices.translate(0.0D, -0.5D, 0.0D);
+            matrices.translate(0.0D, 0.125D, 0.0D);
+            matrices.scale(0.5F, 0.5F, 0.5F);
         } else {
             matrices.scale(0.75F, 0.75F, 0.75F);
         }

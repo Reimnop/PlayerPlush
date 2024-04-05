@@ -3,9 +3,7 @@ package com.reimnop.player_plush.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.reimnop.player_plush.client.rendering.model.CapeMesh;
-import com.reimnop.player_plush.client.rendering.model.PlushModel;
-import com.reimnop.player_plush.client.rendering.model.PlushPose;
+import com.reimnop.player_plush.client.rendering.model.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -45,7 +43,7 @@ public class PlushRenderHelper {
 
         matrices.pushPose();
         // Flip the model
-        matrices.translate(0.0F, 1.875F, 0.0F);
+        matrices.translate(0.0D, 1.5D, 0.0D);
         matrices.mulPose(Axis.XP.rotation((float) Math.PI));
         model.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.popPose();
@@ -55,9 +53,20 @@ public class PlushRenderHelper {
             RenderType capeRenderType = getRenderType(capeTexture);
             VertexConsumer capeVertexConsumer = vertexConsumers.getBuffer(capeRenderType);
 
+            PlushBodyPartPose capePose = pose.getPose(PlushBodyPart.CAPE);
+            if (capePose == null) {
+                capePose = PlushBodyPartPose.DEFAULT_CAPE;
+            }
+
+            CAPE_MODEL.x = capePose.x();
+            CAPE_MODEL.y = capePose.y();
+            CAPE_MODEL.z = capePose.z();
+            CAPE_MODEL.xRot = capePose.pitch();
+            CAPE_MODEL.yRot = capePose.yaw();
+            CAPE_MODEL.zRot = capePose.roll();
+
             matrices.pushPose();
-            // Flip the cape
-            matrices.translate(0.0F, 2.375F, -0.125F);
+            matrices.translate(0.0D, 1.5D, -0.125D);
             matrices.mulPose(Axis.YP.rotation((float) Math.PI));
             matrices.mulPose(Axis.XP.rotation((float) Math.PI));
             CAPE_MODEL.render(matrices, capeVertexConsumer, light, overlay, red, green, blue, alpha);

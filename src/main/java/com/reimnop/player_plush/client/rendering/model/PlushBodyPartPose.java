@@ -12,6 +12,7 @@ public record PlushBodyPartPose(float x, float y, float z, float pitch, float ya
     public static final PlushBodyPartPose DEFAULT_LEFT_ARM = new PlushBodyPartPose(-5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F);
     public static final PlushBodyPartPose DEFAULT_RIGHT_LEG = new PlushBodyPartPose(2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F);
     public static final PlushBodyPartPose DEFAULT_LEFT_LEG = new PlushBodyPartPose(-2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+    public static final PlushBodyPartPose DEFAULT_CAPE = new PlushBodyPartPose(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 
     public PlushBodyPartPose withX(float x) {
         return new PlushBodyPartPose(x, y, z, pitch, yaw, roll);
