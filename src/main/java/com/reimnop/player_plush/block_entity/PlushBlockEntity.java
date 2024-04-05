@@ -7,10 +7,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.TagTypes;
-import net.minecraft.world.level.Level;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PlushBlockEntity extends BlockEntity {
@@ -29,6 +31,18 @@ public class PlushBlockEntity extends BlockEntity {
         super(BlockEntityRegistry.PLUSH_BLOCK_ENTITY, pos, blockState);
     }
 
+    @Override
+    @NotNull
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    @NotNull
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
+
     public float getColorR() {
         return colorR;
     }
@@ -43,6 +57,24 @@ public class PlushBlockEntity extends BlockEntity {
 
     public float getColorA() {
         return colorA;
+    }
+
+    public void setOwnerName(@Nullable String ownerName) {
+        this.ownerName = ownerName;
+        setChanged();
+    }
+
+    public void setOwnerProfile(@Nullable GameProfile ownerProfile) {
+        this.ownerProfile = ownerProfile;
+        setChanged();
+    }
+
+    public void setColor(float r, float g, float b, float a) {
+        this.colorR = r;
+        this.colorG = g;
+        this.colorB = b;
+        this.colorA = a;
+        setChanged();
     }
 
     @Nullable
