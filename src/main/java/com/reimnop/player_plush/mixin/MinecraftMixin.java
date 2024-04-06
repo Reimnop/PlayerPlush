@@ -1,13 +1,11 @@
 package com.reimnop.player_plush.mixin;
 
 import com.reimnop.player_plush.event.ServicesLifecycleCallback;
-import com.reimnop.player_plush.item.PlushItem;
+import com.reimnop.player_plush.item.BlockEntitySyncable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.Services;
 import net.minecraft.server.WorldStem;
 import net.minecraft.server.packs.repository.PackRepository;
@@ -74,24 +72,11 @@ public class MinecraftMixin {
     }
 
     // nbt serialization mixins
-    // TODO: This is extremely cursed, but it works
     @Inject(method = "addCustomNbtData", at = @At("HEAD"), cancellable = true)
     public void addCustomNbtDataInject(ItemStack stack, BlockEntity be, CallbackInfo ci) {
-        if (stack.getItem() instanceof PlushItem) {
+        if (stack.getItem() instanceof BlockEntitySyncable syncable) {
             ci.cancel();
-
-            // Save block entity data to item stack
-            CompoundTag tag = be.saveWithFullMetadata();
-            CompoundTag stackTag = stack.getOrCreateTag();
-            if (tag.contains("Owner", Tag.TAG_COMPOUND)) {
-                stackTag.put("Owner", tag.getCompound("Owner"));
-            }
-            if (tag.contains("Owner", Tag.TAG_STRING)) {
-                stackTag.putString("Owner", tag.getString("Owner"));
-            }
-            if (tag.contains("Color", Tag.TAG_INT)) {
-                stackTag.putInt("Color", tag.getInt("Color"));
-            }
+            syncable.syncFromBlockEntity(stack, be);
         }
     }
 }
