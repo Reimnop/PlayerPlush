@@ -2,6 +2,7 @@ package com.reimnop.player_plush.block;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.MapCodec;
+import com.reimnop.player_plush.ItemRegistry;
 import com.reimnop.player_plush.block_entity.PlushBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,6 +10,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -70,6 +73,34 @@ public class PlushBlock extends HorizontalDirectionalBlock implements EntityBloc
     @Override
     public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return 1.0F;
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof PlushBlockEntity plushBlockEntity) {
+                CompoundTag blockEntityTag = plushBlockEntity.saveWithoutMetadata();
+                ItemStack stack = new ItemStack(this);
+                CompoundTag tag = stack.getOrCreateTag();
+
+                if (blockEntityTag.contains("Owner", Tag.TAG_COMPOUND)) {
+                    tag.put("Owner", blockEntityTag.getCompound("Owner"));
+                }
+                if (blockEntityTag.contains("Owner", Tag.TAG_STRING)) {
+                    tag.putString("Owner", blockEntityTag.getString("Owner"));
+                }
+                if (blockEntityTag.contains("Color", Tag.TAG_INT)) {
+                    tag.putInt("Color", blockEntityTag.getInt("Color"));
+                }
+
+                ItemEntity itemEntity = new ItemEntity(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, stack);
+                itemEntity.setDefaultPickUpDelay();
+                level.addFreshEntity(itemEntity);
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

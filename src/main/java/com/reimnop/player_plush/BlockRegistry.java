@@ -8,7 +8,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockRegistry {
     public static final PlushBlock PLUSH_BLOCK = new PlushBlock(BlockBehaviour.Properties.of()
-            .sound(SoundType.WOOL));
+            .sound(SoundType.WOOL)
+            .strength(0.8F));
 
     public static void register() {
         // Register blocks
