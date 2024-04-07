@@ -10,6 +10,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +67,8 @@ public class PlushBlockEntity extends BlockEntity {
 
     public void setOwnerProfile(@Nullable GameProfile ownerProfile) {
         this.ownerProfile = ownerProfile;
-        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     public void setColor(float r, float g, float b, float a) {
@@ -74,7 +76,8 @@ public class PlushBlockEntity extends BlockEntity {
         this.colorG = g;
         this.colorB = b;
         this.colorA = a;
-        setChanged();
+        assert level != null;
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Nullable
@@ -96,8 +99,14 @@ public class PlushBlockEntity extends BlockEntity {
 
         if (tag.contains("Owner", Tag.TAG_STRING)) {
             this.ownerName = tag.getString("Owner");
-        } else if (tag.contains("Owner", Tag.TAG_COMPOUND)) {
+        } else {
+            this.ownerName = null;
+        }
+
+        if (tag.contains("Owner", Tag.TAG_COMPOUND)) {
             this.ownerProfile = NbtUtils.readGameProfile(tag.getCompound("Owner"));
+        } else {
+            this.ownerProfile = null;
         }
 
         if (tag.contains("Color", Tag.TAG_INT)) {
@@ -106,6 +115,11 @@ public class PlushBlockEntity extends BlockEntity {
             this.colorG = (float) (color >> 16 & 255) / 255.0F;
             this.colorB = (float) (color >> 8 & 255) / 255.0F;
             this.colorA = (float) (color & 255) / 255.0F;
+        } else {
+            this.colorR = 1.0F;
+            this.colorG = 1.0F;
+            this.colorB = 1.0F;
+            this.colorA = 1.0F;
         }
     }
 

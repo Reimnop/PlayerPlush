@@ -9,10 +9,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +52,30 @@ public class PlushBlock extends HorizontalDirectionalBlock implements EntityBloc
     @Override
     protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.isShiftKeyDown() && player.getItemInHand(hand).getItem() instanceof PlayerHeadItem) {
+            if (!level.isClientSide) {
+                // Copy player head item SkullOwner tag to BlockEntity
+                BlockEntity blockEntity = level.getBlockEntity(pos);
+                if (blockEntity instanceof PlushBlockEntity plushBlockEntity) {
+                    ItemStack heldStack = player.getItemInHand(hand);
+                    CompoundTag tag = heldStack.getTag();
+                    if (tag != null) {
+                        CompoundTag newTag = new CompoundTag();
+                        if (tag.contains("SkullOwner")) {
+                            newTag.put("Owner", tag.get("SkullOwner"));
+                        }
+                        plushBlockEntity.load(newTag);
+                        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+                    }
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.use(state, level, pos, player, hand, hit);
     }
 
     @Override
